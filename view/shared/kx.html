@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+<title>Get Colors from Image</title>
+<!-- saved from url=(0079)http://120.55.89.42:3000/pickColorFromImage.html?callback=colorSelect&channel=3  -->
+<script type="text/javascript">
+	var ev=0;
+	var cnvHeight;
+	var cnvWidth;
+	var mousePos;
+	var c;
+	var ctx;
+	var cPix;
+	var ctxPix;
+	var img;
+	var imgHeight;
+	var imgWidth;
+
+	var ParseUrl = function(){
+	    var url = window.location.href;
+	    var paraString = url.substring(url.indexOf("?") + 1, url.length).split("&");
+	    var urlPara = {}
+	    for (i = 0; j = paraString[i]; i++) {
+	        urlPara[j.substring(0, j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=") + 1, j.length);
+	    }
+	    return urlPara;
+	}
+	var urlPara = ParseUrl();
+
+	var callback = function(){};
+          if( urlPara["callback"] ){
+              callback = parent.window[urlPara["callback"]];
+              // cb(cameraNameArray, microphoneNameArray);
+              // console.log("success!");
+          }
+
+	var onclickListener = function(evt) {
+		imageData = ctxPix.getImageData(0,0,150,150);
+		var barva='#'+d2h(imageData.data[45300+0])+d2h(imageData.data[45300+1])+d2h(imageData.data[45300+2]);
+		document.getElementById("pixcolor").value = barva;
+		callback(urlPara.channel, barva);
+		document.getElementById("pixcolor").select();
+		document.getElementById("barvadiv").style.backgroundColor=barva;
+		istat=!istat;
+	};
+
+	function myFunction()
+	{
+		istat=true;
+		cnvWidth=320;
+		cnvHeight=180;
+
+		c=document.getElementById("myCanvas");
+		ctx=c.getContext("2d");
+
+		cPix=document.getElementById("pixCanvas");
+		ctxPix=cPix.getContext("2d");
+
+		ctxPix.mozImageSmoothingEnabled = false;
+		ctxPix.imageSmoothingEnabled = false;
+
+		img=document.getElementById("slika");
+		imgHeight = img.height;
+		imgWidth = img.width;
+		
+		if (imgHeight<cnvHeight && imgWidth<cnvWidth){
+			ctx.mozImageSmoothingEnabled = false;
+			ctx.imageSmoothingEnabled = false;
+		}
+
+		if ((imgWidth/imgHeight)<1.56667){
+			cnvWidth=imgWidth/imgHeight*cnvHeight;
+		}else{
+			cnvHeight=cnvWidth/(imgWidth/imgHeight);
+		}
+		ctx.clearRect(0, 0, c.width, c.height);
+		ctx.drawImage(img,0,0,cnvWidth,cnvHeight);
+		
+		var onmoveListener = function(evt) {
+			ev=1;
+			// if (istat){
+				mousePos = getMousePos(c, evt);
+				drawPix(cPix, ctxPix, img, Math.round(mousePos.x*(imgWidth/cnvWidth)), Math.round(mousePos.y*(imgHeight/cnvHeight)));
+			// }
+		};
+		c.addEventListener('mousemove', onmoveListener, false);
+		c.addEventListener('mousedown', onclickListener, false);
+		
+		var onMiniclickListener = function(evt) {
+			mousePos = getMousePos(cPix, evt);
+			imageData = ctxPix.getImageData(0,0,150,150);
+			var loc= Math.round(mousePos.y)*600+Math.round(mousePos.x)*4;
+			var barva='#'+d2h(imageData.data[loc+0])+d2h(imageData.data[loc+1])+d2h(imageData.data[loc+2]);
+			document.getElementById("pixcolor").value = barva;
+			callback(urlPara.channel, barva);
+			document.getElementById("pixcolor").select();
+			document.getElementById("barvadiv").style.backgroundColor=barva;
+		};
+		cPix.addEventListener('mousedown', onMiniclickListener, false);
+		  
+	}
+	function drawPix(cPix, ctxPix, img, x, y) {
+		ctxPix.clearRect(0, 0, cPix.width, cPix.height);
+		if (x<5) x=5;
+		if (y<5) y=5;
+		if (x>imgWidth-4) x=imgWidth-4;
+		if (y>imgHeight-4) y=imgHeight-4;
+		ctxPix.drawImage(img,x-5,y-5,9,9,0,0,cPix.width,cPix.height);
+	}
+	function getMousePos(canvas, evt) {
+		var rect = canvas.getBoundingClientRect();
+		return { x: evt.clientX - rect.left, y: evt.clientY - rect.top	};
+	}
+	function d2h(d){
+		return ("0"+d.toString(16)).slice(-2).toUpperCase();
+	}
+	function greenbox(c, x, y){
+		c.beginPath();
+	    c.rect(x-5, y-5, 9, 9);
+	    c.lineWidth = 1;
+	    c.strokeStyle = '#00FF00';
+	    c.stroke();
+	}
+</script>
+</head>
+<body>
+<div style="width:410px;height:180px;position: relative;background-color: #EEE;">
+<canvas id="myCanvas" width="320" height="180" style="border:1px solid #d3d3d3;position: absolute; left: 0; top: 0; z-index: 0;">Your browser does not support the HTML5 canvas tag.</canvas>
+<canvas id="pixCanvas" width="90" height="90" style="border:1px solid #d3d3d3;position: absolute; left: 320px; top: 0; z-index: 0;">Your browser does not support the HTML5 canvas tag.</canvas>
+<div id="barvadiv" style="border:25px solid #d3d3d3;height:42px;width:42px;background-color:#d3d3d3;position: absolute; left: 320px; top: 90px; z-index: 0;"></div>
+</div>
+<div id="insertcolor" style="font-size:14px;display: none;">
+	Color Code: <input type="text" maxlength="7" id="pixcolor" name="pixcolor" style="font-size:20px;width:100px;">
+</div>
+<img id="slika" alt="Image preview" style="display:none" onload="myFunction()">
+<script src="../shared/js/common-obj.js"></script>
+<script type="text/javascript">
+document.getElementById("slika").src = lcpsPreviewImg + "?lcpsAddr="+urlPara.videoip+":3000&channel=" + urlPara.channel;
+</script>
+</body></html>
+

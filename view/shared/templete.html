@@ -1,0 +1,541 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>演播室模版设置</title>
+<script src="http://cdn.aodianyun.com/static/jquery/jquery-1.7.2.min.js" type="text/javascript"></script>
+<style>
+html {
+    height:100%;
+}
+body {
+    margin:0px;
+    padding:0px;
+    height:100%;
+    overflow:hidden;
+    min-width:1050px;
+    min-height:600px;
+    font-family: '微软雅黑 Regular', '微软雅黑';
+}
+.mainBody {
+    width:100%;
+    height:100%;
+    background-color:rgb(228,228,228);
+}
+.topbar {
+    height:60px;
+    width:100%;
+    line-height:60px;
+    background-color:rgb(51,61,70);
+    font-size: 24px;
+    color: #AEAEAE;
+    padding-left:60px;
+}
+.leftBody {
+    height:100%;
+    width:80%;
+    float:left;
+    overflow:hidden;
+    text-align:center;
+}
+.rightBody {
+    width:20%;
+    height:100%;
+    float:right;
+    background-color:white;
+    border-left:1px solid rgb(201,201,201);
+}
+.preview {
+    border:22px solid white;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=3);/*ie*/
+    -moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
+    -webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
+    box-shadow:2px 2px 10px #909090;/*opera或ie9*/
+    margin:0px auto 0px auto;
+    width:640px;
+    height:360px;
+    -moz-user-select: none;
+    -o-user-select:none;
+    -khtml-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    overflow:hidden;
+    position:absolute;
+}
+.rboxTop {
+    height:42px;
+    background-color:rgb(118,131,143);
+    color:white;
+    padding-left:28px;
+    font-size: 16px;
+    line-height:42px;
+    margin-bottom:25px;
+}
+.settingItem {
+    padding-left:28px;
+    margin-top:10px;
+}
+.settingItem div,.settingItem span {
+    font-weight: 700;
+    font-size: 14px;
+    color: #797979;
+    line-height:30px;
+}
+.settingItem input {
+    width: 283px;
+    height: 28px;
+    font-size: 14px;
+    color: #000000;
+    border:1px solid #909090;
+}
+.settingItem .videoCount {
+    width:78px;
+    height:25px;
+    border:1px solid #808080;
+    font-size:15px;
+    margin-left:5px;
+    outline:none;
+    line-height:25px;
+}
+.f-position{text-align: center;}
+#setBtn {
+    font-size: 15px;
+    color: #FFFFFF;
+    background-color:rgb(0,142,219);
+    border-radius:5px;
+    display:inline-block;
+    cursor:pointer;
+    height:35px;
+    width:88px;
+    text-align:center;
+    line-height:35px;
+    margin:5px auto 0px auto;
+}
+#setBtn:hover {
+    background-color:#0094ff;
+}
+.tipsItem {
+    text-align:center;
+    color:green;
+    height:40px;
+    line-height:40px;
+    width: 100%;
+}
+.uploadBtn {
+    height:30px;
+    width:78px;
+    background-color:rgb(144,144,144);
+    border-radius:5px;
+    color:white;
+    display:inline-block;
+    text-align:center;
+    line-height:30px;
+    font-size:15px;
+    cursor:pointer;
+    text-decoration:none;
+    margin-left:10px;
+}
+.uploadBtn:hover {
+    background-color:rgb(128, 128, 128);
+}
+.uploadBox {
+    height:40px;
+}
+.uploadBox span,.uploadBox a,.uploadBox img {
+    float:left;
+}
+.uploadBox img {
+    height:22px;
+    width:22px;
+    margin:3px 0px 0px 10px;
+}
+.settingItem .sizeInput {
+    margin-top:10px;
+}
+.settingItem .sizeInput input{
+    width:80px;
+    outline:none;
+    line-height:28px;
+}
+.settingItem .sizeInput img {
+    width:24px;
+    height:24px;
+    margin:10px 20px 0px 0px;
+    cursor:pointer;
+}
+.videoBackground, .videoSurface, .videoLayer {
+    width:640px;
+    height:360px;
+    position:absolute;
+}
+.videoBackground {
+    z-index:10;
+}
+.videoLayer {
+    z-index:20;
+}
+.videoSurface {
+    z-index:30;
+}
+.videoBackground img,.videoSurface img {
+    height:100%;
+    width:100%;
+}
+.videoLayer .videoItem {
+    background-color:black;
+    background-color:rgba(0,0,0,0.8);
+    color:white;
+    width:160px;
+    height:90px;
+    border:1px solid #AEAEAE;
+    position:absolute;
+    cursor:default;
+    overflow:hidden;
+    line-height:85px;
+    top:0px;
+    left:0px;
+}
+.videoLayer .selectVideoItem {
+    border:1px solid #FF6600;
+}
+</style>
+<script type="text/javascript">
+    function getQueryStr(str,url) {
+        var LocString = String(url!=undefined?url:window.document.location.href);
+        var rs = new RegExp("(^|)" + str + "=([^&]*)(&|$)", "gi").exec(LocString), tmp;
+        if (tmp = rs) {
+            return decodeURIComponent(tmp[2]);
+        }
+        return "";
+    }
+    var userId = getQueryStr("userId");
+    var accessId = getQueryStr("accessId");
+    var accessKey = getQueryStr("accessKey");
+    var studioId = getQueryStr("studioId");
+    var maxVideoCount = getQueryStr("maxCount");
+    maxVideoCount = maxVideoCount ? maxVideoCount : 4;
+    var finishedCallback = getQueryStr("callback");
+    finishedCallback = finishedCallback ? finishedCallback : "onSetTempleteFinished";
+    /*
+    var videoHeight = getQueryStr("h");
+    var videoWidth = getQueryStr("w");
+    videoHeight = videoHeight ? videoHeight : 720;
+    videoWidth = videoWidth ? videoWidth : 1280;*/
+    function uiLayout() {
+        $(".centerBox").height(parseInt($(".mainBody").height() - $(".topbar").height()));
+        $(".rightBody").width(348);
+        $(".leftBody").width(parseInt($(".mainBody").width() - $(".rightBody").width() - 1));
+        $(".preview").css({
+            "margin-top": ($(".centerBox").height() - $(".preview").height() - 100) / 2,
+            "margin-left": ($(".leftBody").width() - $(".preview").width() - 44)/2
+        });
+    }
+    $(window).resize(function () {
+        uiLayout();
+    });
+    $.fn.moveableContainer = function (option) {
+        container = $(this);
+        var Handler = {
+            cursorOffsetX: 0,
+            cursorOffsetY: 0,
+            currentDiv: null,
+            isStart: false,
+            Initialize: function () {
+                var children = container.children();
+                container.children().mousedown(function (e) {
+                    if (Handler.isStart) return;
+                    Handler.isStart = true;
+                    Handler.currentDiv = $(this);
+                    Handler.cursorOffsetX = e.clientX - $(this).offset().left;
+                    Handler.cursorOffsetY = e.clientY  - $(this).offset().top;
+                });
+                $(document).mousemove(function (event) {
+                    if (!Handler.isStart) return;
+                    var containerX = container.offset().left;
+                    var containerY = container.offset().top;
+                    var left = event.clientX - containerX - Handler.cursorOffsetX;
+                    var top = event.clientY - containerY - Handler.cursorOffsetY;
+                    Handler.currentDiv.css({ "top": top, "left": left });
+                });
+                function mouseupHandler() {
+                    if (!Handler.isStart) return;
+                    Handler.isStart = false;
+                    Handler.currentDiv = null;
+                }
+                $(document).mouseup(mouseupHandler);
+                container.children().mouseup(mouseupHandler);
+            }
+        };
+        Handler.Initialize();
+        return Handler;
+    };
+    function setVideoSize(height, width) {
+        height = parseInt(height < 0 ? 0 : height);
+        width = parseInt(width < 0 ? 0 : width);
+        var divHeight = $(".preview").height() / 720 * height;
+        var divWidth = $(".preview").width() / 1280 * width;
+        $(".selectVideoItem").height(divHeight).width(divWidth).attr("vHeight", height).attr("vWidth", width);
+        $("#videoHeight").val(height);
+        $("#videoWidth").val(width);
+        $(".selectVideoItem").css({ "line-height": parseInt(divHeight-5) + "px" });
+    }
+    function setVideoPosition(x, y) {
+        var divY = $(".preview").height() / 720 * y - 1;
+        var divX = $(".preview").width() / 1280 * x - 1;
+        $(".selectVideoItem").css({ "top": divY, "left": divX });
+        $("#videoX").val(x);
+        $("#videoY").val(y);
+    }
+    function fileUploadStart() {
+        $($('#uploadForm').attr("waitImg")).show();
+    }
+    function uploadImage(target, waitImg) {
+        if ($('#uploadForm').attr("waitImg") && $($('#uploadForm').attr("waitImg")).css("display") != "none") return;
+        $('#uploadForm').attr("waitImg", waitImg);
+        $('#uploadForm').attr("targetImg", target);
+        $('#uploadForm').contents().find('#fileField').click();
+    }
+    $(function () {
+        uiLayout();
+        $(".videoCount").html('');
+        $(".videoLayer").html('');
+        for (var i = 1; i <= maxVideoCount; ++i) {
+            $(".videoCount").append('<option value="' + i + '">' + i + '</option>');
+            var item = $('<div class="videoItem" vIndex="'+(i-1)+'">视频' + i + '</div>');
+            item.css({ "z-index": i - 1 }).attr("vHeight", "180").attr("vWidth", "320");
+            item.css({ "top": ((i - 1) * 10 -1) + "px", "left": ((i - 1) * 10 -1) + "px" });
+            $(".videoLayer").append(item);
+        }
+        $(".videoLayer").moveableContainer();
+        $(".videoCount").val(maxVideoCount);
+        $(".videoItem[vIndex=" + (maxVideoCount - 1) + "]").addClass("selectVideoItem");
+        $(".preview").mouseover(function () {
+            $(".videoLayer").css({ "z-index": 40 });
+        }).mouseout(function () {
+            $(".videoLayer").css({ "z-index": 20 });
+        });
+        $(".videoItem").mousedown(function (e) {
+            $(this).addClass("selectVideoItem");
+            $(this).siblings().removeClass("selectVideoItem");
+            var vlist = $(".videoItem");
+            var curZIndex = parseInt($(this).css("z-index"));
+            for (var i = 0; i < vlist.length; ++i) {
+                var zOrder = parseInt($(vlist[i]).css("z-index"));
+                if(zOrder>curZIndex) {
+                    $(vlist[i]).css({ "z-index": zOrder -1});
+                }
+            }
+            $(this).css({ "z-index": maxVideoCount - 1 });
+            $("#videoHeight").val($(this).attr("vHeight"));
+            $("#videoWidth").val($(this).attr("vWidth"));
+            $("#videoX").val(parseInt($(this).css("left")?$(this).css("left").replace("px"):0) - 1);
+            $("#videoY").val(parseInt($(this).css("top")?$(this).css("top").replace("px"):0) - 1);
+        });
+        $(".videoCount").change(function () {
+            var count = parseInt($(this).val());
+            var i = 0;
+            for (i = 0; i < count; ++i) {
+                $(".videoItem[vIndex=" + i + "]").css({
+                    "top": (i * 10 - 1) + "px",
+                    "left": (i * 10 - 1) + "px",
+                    "z-index": i,
+                    height: 90,
+                    width: 160,
+                    "line-height": "85px"
+                }).attr("vHeight", "180").attr("vWidth", "320");
+            }
+            $(".videoItem[vIndex=" + (count - 1) + "]").mousedown().mouseup();
+            for (; i < maxVideoCount; ++i) {
+                $(".videoItem[vIndex=" + i + "]").css({ "top": parseInt($(".preview").height()) + "px", "left": parseInt($(".preview").width()) + "px" });
+            }
+        });
+        $("#zoominBtn").click(function () {
+            var vheight = parseInt($(".selectVideoItem").attr("vHeight"));
+            var vwidth = parseInt($(".selectVideoItem").attr("vWidth"));
+            setVideoSize(vheight*1.1, vwidth*1.1);
+        });
+        $("#zoomoutBtn").click(function () {
+            var vheight = parseInt($(".selectVideoItem").attr("vHeight"));
+            var vwidth = parseInt($(".selectVideoItem").attr("vWidth"));
+            setVideoSize(vheight * 0.9, vwidth * 0.9);
+        });
+        $(".videoItem[vIndex=" + (maxVideoCount - 1) + "]").mousedown().mouseup();
+        $(".sizeInput1 input").change(function () {
+            var h = parseInt($("#videoHeight").val());
+            var w = parseInt($("#videoWidth").val());
+            if(isNaN(h) || isNaN(w)) {
+                return;
+            }
+            setVideoSize(h, w);
+        });
+        $(".sizeInput2 input").change(function () {
+            var x = parseInt($("#videoX").val());
+            var y = parseInt($("#videoY").val());
+            if (isNaN(x) || isNaN(y)) {
+                return;
+            }
+            setVideoPosition(x, y);
+        });
+        var uploadPage = "upload.html?studioId=" + studioId + "&accessId=" + accessId + "&accessKey=" + accessKey + "&userId=" + userId;
+        $("#uploadForm").attr("src", uploadPage);
+        $("#uploadForm").load(function () {
+            var waitImg = $($(this).attr("waitImg"));
+            var targetImg = $('#uploadForm').attr("targetImg");
+            if (!waitImg || waitImg.length <= 0) return;
+            try {
+                var resp = $.parseJSON($('#uploadForm').contents().find("body").html());
+                if (resp.location) {
+                    $(targetImg).attr("src", resp.location);
+                } else {
+                    alert("文件上传失败");
+                }
+            } catch (err) {
+                if (waitImg.css("display") != "none") {
+                    console.log("upload response [error] : ", err);
+                    alert("文件上传失败");
+                }
+            }
+            if (waitImg.css("display") != "none") {
+                $("#uploadForm").attr("src", uploadPage);
+                waitImg.hide();
+            }
+        });
+    });
+    function getZIndexList(list) {
+        var zIndexList = [];
+        for (var i = 0; i < list.length; ++i) {
+            var item = $(list[i]);
+            var z = parseInt(item.css("z-index"));
+            zIndexList.push({ i: i, z: z });
+        }
+        zIndexList.sort(function (a, b) {
+            return a.z - b.z;
+        });
+        for (var i = 0; i<zIndexList.length; ++i) {
+            zIndexList[i].z = i;
+        }
+        zIndexList.sort(function (a, b) {
+            return a.i - b.i;
+        });
+        return zIndexList;
+    }
+    function getTempleteInfo() {
+        var video = [];
+        var list = $(".videoLayer .videoItem");
+        var zIndexList = getZIndexList(list);
+        for (var i = 0; i < list.length; ++i) {
+            var item = $(list[i]);
+            var z = zIndexList[i].z;
+            var x = (parseInt(item.css("left").replace("px", "")) + 1) / $(".preview").width() * 1280;
+            var y = (parseInt(item.css("top").replace("px", "")) + 1) / $(".preview").height() * 720;
+            var w = item.width() / $(".preview").width() * 1280;
+            var h = item.height()  / $(".preview").height() * 720;
+            video.push({ z: z, x: x, y: y, w: w, h: h, 
+                dx: parseInt(item.css("left").replace("px", "")),
+                dy: parseInt(item.css("top").replace("px", "")),
+                dw: item.width(),
+                dh: item.height()
+            });
+        }
+        return {
+            background: "http://studio.aodianyun.com/view/shared/templete/background.html?image=" + encodeURIComponent($(".videoBackground img").attr("src")),
+            foreground: "http://studio.aodianyun.com/view/shared/templete/desk.html?image=" + encodeURIComponent($(".videoSurface img").attr("src")),
+            video: video
+        }
+    }
+    function setTempleteInfo(info) {
+        if (!info) return;
+        var bgImage = getQueryStr("image", info.background);
+        var fgImage = getQueryStr("image", info.foreground);
+        $(".videoBackground img").attr("src", bgImage);
+        $(".videoSurface img").attr("src", fgImage);
+        var video = info.video;
+        for (var i = 0; i < video.length; ++i) {
+            var item = video[i];
+            var divItem = $(".videoItem[vIndex=" + i + "]");
+            divItem.css({
+                "top": item.dy ? item.dy : ($(".preview").height() / 720 * item.y),
+                "left": item.dx ? item.dx : ($(".preview").width() / 1280 * item.x),
+                "z-index": item.z
+            }).height(item.dh ? item.dh : ($(".preview").height() / 720 * item.h)).
+                width(item.dw ? item.dw : ($(".preview").width() / 1280 * item.w)).attr("vHeight", item.h).attr("vWidth", item.w);
+            divItem.css({ "line-height": parseInt(divItem.height()) + "px" });
+        }
+        $(".selectVideoItem").mousedown().mouseup();
+    }
+    function changeSettings(operate) {
+        var tempInfo = getTempleteInfo();
+        data={'tempInfo':tempInfo,'operate':operate};
+        console.log("getTempleteInfo [info] ", tempInfo);
+        var callback = window.parent[finishedCallback];
+        if (callback) {
+            callback(data);
+        }
+    }
+</script>
+</head>
+<body>
+    <div class="mainBody">
+        <div class="topbar">模版设置</div>
+        <div class="centerBox">
+            <div class="leftBody">
+                <div class="preview" >
+                    <div class="videoBackground">
+                        <img src="http://studio.aodianyun.com/view/shared/templete/background.jpg" />
+                    </div>
+                    <div class="videoLayer"></div>
+                    <div class="videoSurface">
+                        <img src="http://studio.aodianyun.com/view/shared/templete/desk.png" />
+                    </div>
+                </div>
+            </div>
+            <div class="rightBody">
+                <div class="rboxTop">模版设置</div>
+                <div>
+                    <div class="settingItem uploadBox">
+                        <span>&lt;-- 请在左边拖动视频位置</span>
+                        <iframe style="height:0px;width:0px;" frameborder="0" id="uploadForm" ></iframe>
+                    </div>
+                    <div class="settingItem uploadBox">
+                        <span>背景图片:</span>
+                        <a class="uploadBtn" onclick="uploadImage('.videoBackground img', '#waitImg1')">上传</a>
+                        <img src="images/loading.gif" style="display:none" id="waitImg1" />
+                    </div>
+                    <div class="settingItem uploadBox">
+                        <span>前景图片:</span>
+                        <a class="uploadBtn" onclick="uploadImage('.videoSurface img', '#waitImg2')">上传</a>
+                        <img src="images/loading.gif" style="display:none" id="waitImg2" />
+                    </div>
+                    <div class="settingItem">
+                        <span>视频个数:</span>
+                        <select class="videoCount"></select>
+                    </div>
+                    <div class="settingItem">
+                        <span>---------------&nbsp;操作选中视频&nbsp;---------------</span>
+                        <div class="sizeInput sizeInput1">
+                            宽：<input type="text" id="videoWidth" />&nbsp;&nbsp;
+                            高：<input type="text" id="videoHeight" />
+                        </div>
+                        <div class="sizeInput" >
+                            <img src="images/zoomin.png" id="zoominBtn" />
+                            <img src="images/zoomout.png" id="zoomoutBtn" />
+                        </div>
+                        <div class="sizeInput sizeInput2">
+                            X&nbsp;：<input type="text" id="videoX" />&nbsp;&nbsp;
+                            Y&nbsp;：<input type="text" id="videoY" />
+                        </div>
+                    </div>
+                    <div class="tipsItem">
+                        <div style="display:none;">保存成功!</div>
+                    </div>
+                    <div class="f-position">
+                    <a id="setBtn" onclick="changeSettings('save')">保存&nbsp;</a>
+                    <a id="setBtn" onclick="changeSettings('set')">保存并设置&nbsp;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

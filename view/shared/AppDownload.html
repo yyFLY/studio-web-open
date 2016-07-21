@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-CN">
+    <head>
+        <title>云导播台</title>
+        <meta name="google" value="notranslate" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />  
+        
+        <style type="text/css">
+            body{
+                background-color: #fff;
+            }
+            h1, h2, h3, h4, h5, h6,p {
+                color: #828282;
+            }
+            .container{margin-top: 80px;}
+            .app-logo{margin:5px 15px 0 0;}
+            .image {
+                box-shadow: 0 0 0 4px #ffffff, 0 0 0 5px #e6e6e6;
+                border: 0 none;
+                border-radius: 6px;
+                overflow: hidden;
+                position: relative;
+            }
+            .wrapper > .inner {
+                margin-left: auto;
+                margin-right: auto;
+                width: 60em;
+            }
+            .wrapper > .inner.alt > * {
+                border-top: 2px solid #eeeeee;
+                margin-bottom: 0;
+                margin-top: 3em;
+                padding-top: 3em;
+            }
+            .wrapper > .inner.alt > *:first-child {
+                border-top: 0 none;
+                margin-top: 3em;
+                padding-top: 0;
+            }
+            .spotlight {
+                align-items: center;
+                display: flex;
+                margin: 0 0 2em;
+            }
+            .spotlight .image {
+                display: block;
+                margin: 0 3em 0 0;
+                width: 30%;
+            }
+            .spotlight .image img {
+                display: block;
+                width: 100%;
+            }
+            .spotlight .content {
+                width: 70%;
+            }
+            .spotlight .content > *:last-child {
+                margin-bottom: 0;
+            }
+            .spotlight:nth-child(2n) {
+                flex-direction: row-reverse;
+            }
+            .spotlight:nth-child(2n) .image {
+                margin: 0 0 0 3em;
+            }
+            .spotlight:nth-child(2n) .content {
+                text-align: right;
+            }
+            @media screen and (max-width: 736px) and (orientation: landscape) {
+                .spotlight .image {
+                    margin: 0 2em 0 0;
+                }
+                .spotlight:nth-child(2n) .image {
+                    margin: 0 0 0 2em;
+                }
+            }
+            @media screen and (max-width: 736px) and (orientation: portrait) {
+                .spotlight {
+                    flex-direction: column !important;
+                }
+                .spotlight .image {
+                    margin: 0 0 2em !important;
+                    max-width: 60%;
+                    width: 100%;
+                }
+                .spotlight .content {
+                    text-align: center !important;
+                    width: 100%;
+                }
+            }
+           
+        </style>
+        <script src='../shared/js/QR/QR.js'></script>
+        <script type="text/javascript" language="javascript">
+            var onloads = function(){
+                document.getElementById('imgQR').src = QR( "http://cdn.aodianyun.com/lcps/LCPS.apk", {type: 6, size: 6, level: 'Q'} );
+                document.getElementById('imgQR_IOS').src = QR( "https://itunes.apple.com/us/app/yun-dao-bo/id1058256206?l=zh&ls=1&mt=8", {type: 6, size: 6, level: 'Q'} );
+            }
+        </script>
+    </head>
+    <body onload="onloads()">
+    <div class="wrapper">
+        <div class="inner alt">
+            <div class="spotlight">
+                <div class="image"><img id="imgQR"  src="" alt="二维码扫描下载"></div>                
+                <div class="content">
+                <h3><img class='app-logo' src="images/and_icon.png"></img>Android APP 二维码扫描下载</h3>
+                <p>云导播台发布端APP使用说明 : 1、打开运行云导播APP，显示导播台列表页，首次运行列表为空，需要通过扫码添加导播台;2、扫描的二维码在您PC端的控制台云导播台服务页，点击页面右上角的二维码弹出可使用APP扫码的二维码;3、使用手机的云导播台APP扫描该二维码,4、扫码成功后，在APP的导播台列表显示当前导播台5、点击列表项进入导播台发布界面</p>
+                </div>
+            </div>
+            <div class="spotlight">
+                <div class="image"><img id="imgQR_IOS"  src="" alt="二维码扫描下载"></div>                
+                <div class="content">
+                <h3><img class='app-logo'  src="images/apple_icon.png"></img>IOS APP 二维码扫描下载</h3>
+                <p>App主要功能：•直播列表：通过二维码扫描可以添加直播信息到列表。•发布直播：可以在指定的地方观看到App发布的直播。•聊天评论：App可以接收其他地方发布的聊天评论。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+<script src="js/jquery/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap/bootstrap.min.js"></script>
+</html>

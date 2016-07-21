@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
+    <!-- 
+    Smart developers always View Source. 
+    
+    This application was built using Adobe Flex, an open source framework
+    for building rich Internet applications that get delivered via the
+    Flash Player or to desktops via Adobe AIR. 
+    
+    Learn more about Flex at http://flex.org 
+    // -->
+    <head>
+        <title></title>
+        <meta name="google" value="notranslate" />         
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!-- Include CSS to eliminate any default margins/padding and set the height of the html element and 
+             the body element to 100%, because Firefox, or any Gecko based browser, interprets percentage as 
+             the percentage of the height of its parent container, which has to be set explicitly.  Fix for
+             Firefox 3.6 focus border issues.  Initially, don't display flashContent div so it won't show 
+             if JavaScript disabled.
+        -->
+        <style type="text/css" media="screen"> 
+            html, body  { height:100%; }
+            body { margin:0; padding:0; overflow:auto; text-align:center; 
+                   background-color: #ffffff; }   
+            object:focus { outline:none; }
+            #flashContent { display:none; }
+        </style>
+        
+        <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
+        <!-- BEGIN Browser History required section >
+        <link rel="stylesheet" type="text/css" href="history/history.css" />
+        <script type="text/javascript" src="history/history.js"></script>
+        <! END Browser History required section -->  
+            
+        <script type="text/javascript" src="swfobject.js"></script>
+        <script type="text/javascript">
+
+            var width = 320;
+            var height = 240;
+            var width = '50%';
+            var height = '50%';
+
+            // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+            var swfVersionStr = "11.0.0";
+            // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
+            var xiSwfUrlStr = "playerProductInstall.swf";
+            var flashvars = {
+                // width: width,           //视频显示宽
+                // height: height,         //视频显示高
+
+                // url: "rtmp://lsspublish.aodianyun.com/chenping",
+                // stream: "test",
+                // camIndex: -1,           //摄像头索引
+                // micIndex: -1,           //麦克风索引
+                // camWidth: 320,          //摄像头宽
+                // camHeight: 240,         //摄像头高
+                // camFps: 10,             //摄像头采集帧率
+                // keyFrameInterval:10,    //关键帧间隔
+                // videoByteRate:20480,    //视频码率，单位字节每秒
+                // videoQuality:80,        //视频质量 1-100
+                // audioSampleRate:44,     //音频采样率，单位KHz  可以为5,8,11,22,44
+                // mode: "publish",        //publish, play
+                // // noVideo: true,          //没有视频
+                // // noAudio: true,          //没有音频
+
+                url: "rtmp://lssplay.aodianyun.com/demo",
+                stream: "game",
+                mode: "play",        //publish, play
+
+                bStart: true,
+                volume: 1,      /* 0 - 1 */
+
+                notifyId: "notifyid123",
+                onInit: function(notifyId){
+                    // alert("init");
+                },
+                onRtmpEvent:function(e, notifyId){
+                    console.log(e, notifyId);
+                },
+                onClickEvent:function(notifyId){
+                    console.log("onClickEvent...", notifyId);
+                }
+            };
+            var params = {};
+            params.quality = "high";
+            params.bgcolor = "#ffffff";
+            params.allowscriptaccess = "always";
+            params.allowfullscreen = "true";
+            params.wmode = "Opaque";
+            var attributes = {};
+            attributes.id = "player";
+            attributes.name = "player";
+            attributes.align = "middle";
+            swfobject.embedSWF(
+                "player.swf", "flashContent", 
+                width, height, 
+                swfVersionStr, xiSwfUrlStr, 
+                flashvars, params, attributes);
+            // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
+            swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+
+            // setTimeout(function(){
+            //     document.getElementById('player').SetVolume(0.1);
+            // }, 10000);
+            // setTimeout(function(){
+            //     document.getElementById('player').SetMode("publish", "rtmp://115.29.97.67/live", "9", 0, 0);
+            // }, 3000);
+            // setTimeout(function(){
+            //     document.getElementById('player').StopPlayer();
+            // }, 5000);
+            // setTimeout(function(){
+            //     document.getElementById('player').SetMode("publish", "rtmp://115.29.97.67/live", "9", 0, 0);
+            //     document.getElementById('player').StartPlayer();
+            // }, 10000);
+            // setTimeout(function(){
+            //     document.getElementById('player').SetVolume(0.3);
+            //     document.getElementById('player').SetMode("play", "rtmp://lssplay.aodianyun.com/demo", "variety");
+            // }, 15000);
+            // setTimeout(function(){
+            //     document.getElementById('player').OpenCameraSetting();
+            // }, 5000);
+            // setTimeout(function(){
+            //     document.getElementById('player').OpenMicSetting();
+            // }, 5000);
+        </script>
+    </head>
+    <body>
+        <!-- SWFObject's dynamic embed method replaces this alternative HTML content with Flash content when enough 
+             JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
+             when JavaScript is disabled.
+        -->
+        <div id="flashContent">
+            <p>
+                To view this page ensure that Adobe Flash Player version 
+                11.0.0 or greater is installed. 
+            </p>
+            <script type="text/javascript"> 
+                var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
+                document.write("<a href='http://www.adobe.com/go/getflashplayer'><img alt='Get Adobe Flash player' /></a>" ); 
+            </script> 
+        </div>
+        
+        <noscript>
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%" id="player">
+                <param name="movie" value="player.swf" />
+                <param name="quality" value="high" />
+                <param name="bgcolor" value="#ffffff" />
+                <param name="allowScriptAccess" value="sameDomain" />
+                <param name="allowFullScreen" value="true" />
+                <!--[if !IE]>-->
+                <object type="application/x-shockwave-flash" data="player.swf" width="100%" height="100%">
+                    <param name="quality" value="high" />
+                    <param name="bgcolor" value="#ffffff" />
+                    <param name="allowScriptAccess" value="sameDomain" />
+                    <param name="allowFullScreen" value="true" />
+                <!--<![endif]-->
+                <!--[if gte IE 6]>-->
+                    <p> 
+                        Either scripts and active content are not permitted to run or Adobe Flash Player version
+                        11.0.0 or greater is not installed.
+                    </p>
+                <!--<![endif]-->
+                    <a href="http://www.adobe.com/go/getflashplayer">
+                        <img alt="Get Adobe Flash Player" />
+                    </a>
+                <!--[if !IE]>-->
+                </object>
+                <!--<![endif]-->
+            </object>
+        </noscript>     
+   </body>
+</html>

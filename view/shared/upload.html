@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title></title>
+<script type="text/javascript" src="http://cdn.aodianyun.com/static/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+    function getQueryStr(str) {
+        var LocString = String(window.document.location.href);
+        var rs = new RegExp("(^|)" + str + "=([^&]*)(&|$)", "gi").exec(LocString), tmp;
+        if (tmp = rs) {
+            return decodeURIComponent(tmp[2]);
+        }
+        return "";
+    }
+    $(function () {
+        $("#fileForm").append('<input type="hidden" name="stuKey" value="'+getQueryStr("studioId")+'" />');
+        $("#fileForm").append('<input type="hidden" name="accessId" value="'+getQueryStr("accessId")+'" />');
+        $("#fileForm").append('<input type="hidden" name="accessKey" value="'+getQueryStr("accessKey")+'" />');
+        $("#fileForm").append('<input type="hidden" name="userId" value="'+getQueryStr("userId")+'" />');
+        $("#fileField").change(function (e) {
+            if ((e.target && e.target.files) || (e.dataTransfer && e.dataTransfer.files)) {
+                var file = e.target.files || e.dataTransfer.files;
+                if (file) {
+                    if (window.parent.fileUploadStart) window.parent.fileUploadStart();
+                    $("#fileForm").submit();
+                }
+            } else if (!!$("#fileField").val()) {
+                if (window.parent.fileUploadStart) window.parent.fileUploadStart();
+                $("#fileForm").submit();
+            }
+        });
+    });
+</script>
+</head>
+<body style="height:0px;width:0px;">
+    <form method="post" id="fileForm" enctype="multipart/form-data" action="../index.php?c=upload&a=upload">
+        <input type="file" id="fileField" name="file" style="display:none;">
+    </form>
+</body>
+</html>

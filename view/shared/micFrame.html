@@ -1,0 +1,107 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<script type="text/javascript" src="http://cdn.aodianyun.com/static/jquery/jquery-1.7.2.min.js"></script>
+<script src="http://cdn.aodianyun.com/lss/aodianpublish/publish.js" type="text/javascript"></script>
+</head>
+<body style="overflow:hidden;padding:0px;margin:0px;background-color:black;">
+<div id="playerView"></div>
+<script type="text/javascript">
+    function getQueryStr(str) {
+        var LocString = String(window.document.location.href);
+        var rs = new RegExp("(^|)" + str + "=([^&]*)(&|$)", "gi").exec(LocString), tmp;
+        if (tmp = rs) {
+            return tmp[2];
+        }
+        return "";
+    }
+    var lssAddr = decodeURIComponent(getQueryStr("addr"));
+    var lssApp = getQueryStr("app");
+    var lssStream = getQueryStr("stream");
+    var mode = getQueryStr("mode");
+    var volume = parseInt(getQueryStr("volume"));
+    var width = getQueryStr("width");
+    var height = getQueryStr("height");
+    var selectedCam = getQueryStr("camId");
+    selectedCam = selectedCam == "" ? 0 : parseInt(selectedCam);
+    var selectedMic = getQueryStr("micId");
+    selectedMic = selectedMic == "" ? 0 : parseInt(selectedMic);
+    var selectedSize = "320x240";
+    var start = getQueryStr("start")
+    window.adLss = new aodianLss({
+        container: 'playerView',
+        url: lssAddr + "/" + lssApp + "/" + lssStream,
+        width: width,
+        height: height,
+        autoconnect: false
+    });
+    var startPlayTimer = setInterval(function () {
+        if (typeof (adLss.checkPlayerReady) == 'function' && adLss.checkPlayerReady() == true) {
+            clearInterval(startPlayTimer);
+            if (window.parent.onAodianLssLoad) {
+                window.parent.onAodianLssLoad(mode,window.adLss);
+            }
+            if (!start) return;
+            if (mode == "publish") {
+                lssPublish();
+            } else {
+                lssPlay();
+            }
+        }
+    }, 800);
+    function setVolume(value) {
+        if (window.adLss && window.adLss.setVolume) {
+            volume = value;
+            window.adLss.setVolume(value);
+        }
+    }
+    function setPubParams(CamId,MicId,Size) {
+        selectedCam = CamId;
+        selectedMic = MicId;
+        selectedSize = Size;
+    }
+    function lssPublish() {
+        if (typeof (adLss.checkPlayerReady) == 'function' && adLss.checkPlayerReady() == true) {
+            adLss.closeConnect();
+            adLss.initConnect(lssAddr + "/" + lssApp, lssApp, lssStream);            var videoSize = selectedSize;
+            videoSize = videoSize.split('x');
+            var videoWidth = videoSize[0];
+            var videoHeight = videoSize[1];
+            adLss.setCameraMode(videoWidth, videoHeight, 25);
+            var camID = selectedCam;
+            var micID = selectedMic;
+            var publishConf = {
+                videoWidth: parseInt(videoWidth),
+                videoHeight: parseInt(videoHeight),
+                micID: micID,
+                camID: camID,
+                audioKBitrate: 96,
+                audioSamplerate: 44100,
+                videoFPS: 25,
+                keyFrameInterval: 75,
+                videoKBitrate: 360,
+                videoQuality: 100,
+                volume: volume,
+                isUseCam: true,
+                isUseMic: true,
+                isMute: false
+            };
+            window.adLss.startPublish(publishConf);
+        }
+    }
+    function lssPlay() {
+        if (typeof (adLss.checkPlayerReady) == 'function' && adLss.checkPlayerReady() == true) {
+            window.adLss.closeConnect();
+            window.adLss.initConnect(lssAddr + "/" + lssApp, lssApp, lssStream);
+            var playConf = {
+                volume: volume,
+                isMute: false
+            };
+            window.adLss.startPlay(playConf, 0);
+        }
+    }
+</script>
+</body>
+</html>
